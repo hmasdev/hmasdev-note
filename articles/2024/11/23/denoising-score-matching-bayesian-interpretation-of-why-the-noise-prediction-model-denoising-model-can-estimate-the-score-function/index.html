@@ -1,0 +1,1876 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.45">
+    
+    
+      
+        <title>[Denoising Score Matching] Bayesian Interpretation of Why the Noise Prediction Model (Denoising Model) Can Estimate the Score Function - hmasdev's notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../../assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+    
+    <script>__md_scope=new URL("../../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#denoising-score-matching-bayesian-interpretation-of-why-the-noise-prediction-model-denoising-model-can-estimate-the-score-function" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../../.." title="hmasdev&#39;s notes" class="md-header__button md-logo" aria-label="hmasdev's notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            hmasdev's notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              [Denoising Score Matching] Bayesian Interpretation of Why the Noise Prediction Model (Denoising Model) Can Estimate the Score Function
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 2c-1.05 0-2.05.16-3 .46 4.06 1.27 7 5.04 7 9.54s-2.94 8.27-7 9.54c.95.3 1.95.46 3 .46a10 10 0 0 0 10-10A10 10 0 0 0 9 2"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../.." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../../about/" class="md-tabs__link">
+        
+  
+    
+  
+  About
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../../" class="md-tabs__link">
+          
+  
+    
+  
+  Articles
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../../tags/" class="md-tabs__link">
+        
+  
+    
+  
+  Tags
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../../.." title="hmasdev&#39;s notes" class="md-nav__button md-logo" aria-label="hmasdev's notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    hmasdev's notes
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../about/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Articles
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Articles
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../externals/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Externalss
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Archive
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Archive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2024/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2024
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Categories
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            Categories
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/data-science/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Data Science
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../tags/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tags
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#target-audience" class="md-nav__link">
+    <span class="md-ellipsis">
+      Target Audience
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-denoising-score-matching" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is Denoising Score Matching?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bayesian-interpretation-of-why-the-noise-prediction-model-denoising-model-can-estimate-the-score-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bayesian Interpretation of Why the Noise Prediction Model (Denoising Model) Can Estimate the Score Function
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numerical-verification-of-the-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Numerical Verification of the Interpretation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Numerical Verification of the Interpretation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#numerical-verification-using-analytically-calculated-posterior-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Numerical verification using analytically calculated posterior distribution
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Numerical verification using analytically calculated posterior distribution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#case-1-the-standard-normal-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Case 1: The standard normal distribution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-2-a-mixture-of-two-normal-distributions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Case 2: A mixture of two normal distributions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-3-the-standard-cauchy-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Case 3: The standard Cauchy distribution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-4-a-mixture-of-various-distributions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Case 4: A mixture of various distributions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numerical-verification-using-generated-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Numerical verification using generated data
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../../../../" class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+                  <span class="md-ellipsis">
+                    Back to index
+                  </span>
+                </a>
+              </div>
+            </div>
+            
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    Metadata
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
+                        <time datetime="2024-11-23 00:00:00+00:00" class="md-ellipsis">November 23, 2024</time>
+                      </div>
+                    </li>
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 13h1.5v2.82l2.44 1.41-.75 1.3L15 16.69zm4-5H5v11h4.67c-.43-.91-.67-1.93-.67-3a7 7 0 0 1 7-7c1.07 0 2.09.24 3 .67zM5 21a2 2 0 0 1-2-2V5c0-1.11.89-2 2-2h1V1h2v2h8V1h2v2h1a2 2 0 0 1 2 2v6.1c1.24 1.26 2 2.99 2 4.9a7 7 0 0 1-7 7c-1.91 0-3.64-.76-4.9-2zm11-9.85A4.85 4.85 0 0 0 11.15 16c0 2.68 2.17 4.85 4.85 4.85A4.85 4.85 0 0 0 20.85 16c0-2.68-2.17-4.85-4.85-4.85"/></svg>
+                          <time datetime="2024-11-24 00:00:00+00:00" class="md-ellipsis">November 24, 2024</time>
+                        </div>
+                      </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"/></svg>
+                          <span class="md-ellipsis">
+                            in
+                            
+                              <a href="../../../../category/data-science/">Data Science</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
+                          <span class="md-ellipsis">
+                            
+                              24 min read
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+          </nav>
+          
+        </div>
+      </div>
+    </div>
+    <article class="md-content__inner md-typeset">
+      
+        
+  
+  
+
+<nav class="md-tags" >
+  
+    
+    
+    
+      <a href="../../../../../tags/#denoising-score-matching" class="md-tag">denoising score matching</a>
+    
+  
+    
+    
+    
+      <a href="../../../../../tags/#diffusion-models" class="md-tag">diffusion models</a>
+    
+  
+    
+    
+    
+      <a href="../../../../../tags/#generative-models" class="md-tag">generative models</a>
+    
+  
+</nav>
+
+
+
+<h1 id="denoising-score-matching-bayesian-interpretation-of-why-the-noise-prediction-model-denoising-model-can-estimate-the-score-function">[Denoising Score Matching] Bayesian Interpretation of Why the Noise Prediction Model (Denoising Model) Can Estimate the Score Function</h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">en</label><label for="__tabbed_1_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>This article is partially generated by generative AI.
+Before using the content, please verify it by yourself.
+If you notice any errors or inappropriate expressions, please let me know. Thank you.</p>
+</div>
+<div class="tabbed-block">
+<p>この記事の執筆にあたり一部生成AIを使用しています。
+当方でも内容の確認はしておりますが、内容を鵜呑みにせず、ご自身で確認の上ご活用ください。
+もし、誤りや不適切な表現などお気づきの点がございましたら、お手数ですがお知らせいただけますと幸いです。</p>
+</div>
+</div>
+</div>
+</div>
+<!-- ## はじめに -->
+<h2 id="introduction">Introduction</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">en</label><label for="__tabbed_2_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>It has been a long time since image generation models such as Stable Diffuion and Dall-e were announced. The boom of generative AI is still ongoing.</p>
+<p>In this article, we will use Bayesian estimation to interpret why the noise prediction model (denoising model) can estimate the score function to deepen our understanding of denoising score matching, one of the diffusion models.</p>
+</div>
+<div class="tabbed-block">
+<p>Stable Diffuion, Dall-e などの画像生成モデルが発表されて久しくなりました。今もまだまだ生成AIのブームは続いています。</p>
+<p>本稿では、拡散モデルの一つであるデノイジングスコアマッチングの理解を深めるべく、ノイズ予測モデル（デノイジングモデル）がスコア関数の推定を行うことができる理由について、ベイズ推定を使った解釈を行います。</p>
+</div>
+</div>
+</div>
+<h3 id="target-audience">Target Audience</h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">en</label><label for="__tabbed_3_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<ul>
+<li>People studying diffusion models</li>
+<li>People who have studied diffusion models but are not convinced that noise can be predicted</li>
+</ul>
+</div>
+<div class="tabbed-block">
+<ul>
+<li>拡散モデルを勉強中の人</li>
+<li>拡散モデルを勉強したがノイズを予測することに納得がいかない人</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- more -->
+
+<!-- ## デノイジングスコアマッチングとは -->
+<h2 id="what-is-denoising-score-matching">What is Denoising Score Matching?</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">en</label><label for="__tabbed_4_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Let us consider the problem of estimating the probability distribution <span class="arithmatex">\(p(x)\)</span> of <span class="arithmatex">\(x \in \mathbb{R}^d\)</span> from a finite number of observations <span class="arithmatex">\(\{x_n\}_{n=1}^N\)</span>.
+"Denoising Score Matching" is one of the methods to solve this problem, which estimates the score function <span class="arithmatex">\(s(x):=\nabla_x \log p(x)\)</span> of the probability distribution <span class="arithmatex">\(p(x)\)</span>, and estimates the probability distribution <span class="arithmatex">\(p(x)\)</span>.</p>
+</div>
+<div class="tabbed-block">
+<p><span class="arithmatex">\(x \in \mathbb{R}^d\)</span> とし、<span class="arithmatex">\(x\)</span> が従う確率分布（未知）<span class="arithmatex">\(p(x)\)</span> を有限個の観測値 <span class="arithmatex">\(\{x_n\}_{n=1}^N\)</span> から推定するという問題を考えましょう。
+デノイジングスコアマッチングは、この問題を解くための手法の1つで、確率分布 <span class="arithmatex">\(p(x)\)</span> のスコア関数 <span class="arithmatex">\(s(x):=\nabla_x \log p(x)\)</span> を推定することで、確率分布 <span class="arithmatex">\(p(x)\)</span> を推定する手法です。</p>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">en</label><label for="__tabbed_5_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>It should be noted that even if the score function <span class="arithmatex">\(s(x):=\nabla_x \log p(x)\)</span> can be estimated, it is difficult to estimate the probability distribution <span class="arithmatex">\(p(x)\)</span> itself.</p>
+<p>This is because in order to calculate <span class="arithmatex">\(p(x)\)</span> from <span class="arithmatex">\(s(x)\)</span>, it is necessary to determine the normalization constant, i.e. the partition function <span class="arithmatex">\(Z\)</span>, by integration, which is generally difficult to calculate.</p>
+<p>However, although it is difficult to estimate <span class="arithmatex">\(p(x)\)</span> itself, it is possible to sample from <span class="arithmatex">\(p(x)\)</span> using the score function <span class="arithmatex">\(s(x)\)</span> by using the following Langevin-MonteCarlo method.</p>
+<div class="arithmatex">\[
+x_{t+1} = x_t + \alpha s(x) + \sqrt{2\alpha} \xi
+\]</div>
+<p>where <span class="arithmatex">\(\xi \sim \mathcal{N}(0, I_d)\)</span> (<span class="arithmatex">\(I_d\)</span> is the <span class="arithmatex">\(d\)</span>-dimensional identity matrix).</p>
+</div>
+<div class="tabbed-block">
+<p>スコア関数 <span class="arithmatex">\(s(x):=\nabla_x \log p(x)\)</span> が推定できたとしても <span class="arithmatex">\(p(x)\)</span> 自体を推定することは難しいことには注意が必要です。なぜならば <span class="arithmatex">\(s(x)\)</span> から <span class="arithmatex">\(p(x)\)</span> を計算するためには、規格化定数（つまり分配関数 <span class="arithmatex">\(Z\)</span>）を積分により求める必要があり、一般には計算が困難だからです。</p>
+<p>しかしながら、<span class="arithmatex">\(p(x)\)</span> 自体の推定は困難ですが、スコア関数 <span class="arithmatex">\(s(x)\)</span> を用いて <span class="arithmatex">\(p(x)\)</span> からサンプリングすることは下記の Langevin-MonteCarlo法を用いることで可能です。</p>
+<div class="arithmatex">\[
+x_{t+1} = x_t + \alpha s(x) + \sqrt{2\alpha} \xi
+\]</div>
+<p>ただし、<span class="arithmatex">\(\xi \sim \mathcal{N}(0, I_d)\)</span> (<span class="arithmatex">\(I_d\)</span> は <span class="arithmatex">\(d\)</span> 次元の単位行列) です。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:2"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">en</label><label for="__tabbed_6_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>In denoising score matching, the score function <span class="arithmatex">\(s(x)\)</span> is estimated by minimizing the following objective function with <span class="arithmatex">\(s(x)\)</span> replaced by <span class="arithmatex">\(s_\theta(x)\)</span>.</p>
+</div>
+<div class="tabbed-block">
+<p>デノイジングスコアマッチングでは下記の目的関数を最小化することでスコア関数 <span class="arithmatex">\(s(x)\)</span> を <span class="arithmatex">\(s_\theta(x)\)</span> で推定します。</p>
+</div>
+</div>
+</div>
+<div class="arithmatex">\[
+J_{DSM_{p_\sigma}}(\theta) = \frac{1}{2} \mathbb{E}_{\varepsilon\sim\mathcal{N}(0,\sigma^2I_d), x\sim p(x)}\left[\left\| - \frac{\varepsilon}{\sigma^2} - s_\theta(x+\varepsilon;\sigma)\right\|^2\right]
+\]</div>
+<div class="tabbed-set tabbed-alternate" data-tabs="7:2"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">en</label><label for="__tabbed_7_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Interpreting this equation literally, it means that <span class="arithmatex">\(s_\theta\)</span> is learned to predict (denoise) the noise <span class="arithmatex">\(\varepsilon\)</span> added to the original sample <span class="arithmatex">\(x\)</span> from the noisy sample <span class="arithmatex">\(x+\varepsilon\)</span>. However, this is actually known to be equivalent to minimizing the following objective function (Vincent, 2011)<sup id="fnref2:1"><a class="footnote-ref" href="#fn:1">1</a></sup>:</p>
+</div>
+<div class="tabbed-block">
+<p>これは式の意味をそのまま解釈すると $s_\theta $ がノイズが付与されたサンプル <span class="arithmatex">\(x+\varepsilon\)</span> から元のサンプル <span class="arithmatex">\(x\)</span> に加えられたノイズ <span class="arithmatex">\(\varepsilon\)</span> を予測する（デノイジング）ように学習することを意味していますが、実は下記を最小化することと等価であることが知られています(Vincent, 2011)<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>:</p>
+</div>
+</div>
+</div>
+<div class="arithmatex">\[
+J_{ESM_{p_\sigma}}(\theta) = \frac{1}{2} \mathbb{E}_{\tilde{x}\sim p_\sigma(x)}\left[\left\| \nabla_{\tilde{x}} \log p_\sigma(x) - s_\theta(\tilde{x};\sigma)\right\|^2\right],
+\]</div>
+<div class="tabbed-set tabbed-alternate" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">en</label><label for="__tabbed_8_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>where <span class="arithmatex">\(p_\sigma(\tilde{x}) = \int p(x) \mathcal{N}(\tilde{x}; x, \sigma^2 I_d) dx\)</span> and <span class="arithmatex">\(p_\sigma(\tilde{x})\)</span> is the perturbed distribution of <span class="arithmatex">\(p(x)\)</span>.</p>
+<p>The <span class="arithmatex">\(s_\theta(\tilde{x};\sigma)\)</span> learned by this minimization approximates the score function of <span class="arithmatex">\(p_\sigma(\tilde{x})\)</span>, especially when <span class="arithmatex">\(\sigma\)</span> is sufficiently small, it approximates the score function of <span class="arithmatex">\(p(x)\)</span>.</p>
+<p>So far, we have seen denoising score matching, but it is difficult to understand intuitively whether noise prediction and score function estimation are equivalent (at least for me). Okanohara(2023)<sup id="fnref2:3"><a class="footnote-ref" href="#fn:3">3</a></sup> used a figure of Vincent(2010)<sup id="fnref2:2"><a class="footnote-ref" href="#fn:2">2</a></sup> to explain the intuitive meaning of denoising score matching.</p>
+<blockquote>
+<p>Adding noise causes the probability to jump to low probability regions. The average denoising in various directions becomes the perpendicular to the direction of high probability.</p>
+</blockquote>
+</div>
+<div class="tabbed-block">
+<p>ただし、<span class="arithmatex">\(p_\sigma(\tilde{x}) = \int p(x) \mathcal{N}(\tilde{x}; x, \sigma^2 I_d) dx\)</span> で <span class="arithmatex">\(p_\sigma(\tilde{x})\)</span> は <span class="arithmatex">\(p(x)\)</span> を少しぼやかした摂動後分布です。</p>
+<p>この最小化により学習される <span class="arithmatex">\(s_\theta(\tilde{x};\sigma)\)</span> は <span class="arithmatex">\(p_\sigma(\tilde{x})\)</span> のスコア関数を近似、特に <span class="arithmatex">\(\sigma\)</span> が十分に小さい場合は <span class="arithmatex">\(p(x)\)</span> のスコア関数を近似します。</p>
+<p>さて、ここまでデノイジングスコアマッチングについて見てきましたが、ノイズの予測とスコア関数の推定が等価であるのか、直感的には理解しがたいです（少なくとも私には）。岡野原さんは<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup>においてVincent(2010)<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup>の図を用いてデノイジングスコアマッチングの直感的な意味を下記のように説明しています：</p>
+<blockquote>
+<p>ノイズを加えると確率が低い領域へ飛び出す。様々な方向へのデノイジンの平均は確率が高い方向への垂線となる</p>
+</blockquote>
+</div>
+</div>
+</div>
+<blockquote>
+<p><img alt="Vincent, 2011, Figure2" src="../../../../denoising-score-matching-bayesian-interpretation_files/image.png" /></p>
+</blockquote>
+<div class="tabbed-set tabbed-alternate" data-tabs="9:2"><input checked="checked" id="__tabbed_9_1" name="__tabbed_9" type="radio" /><input id="__tabbed_9_2" name="__tabbed_9" type="radio" /><div class="tabbed-labels"><label for="__tabbed_9_1">en</label><label for="__tabbed_9_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>However, it is still difficult to understand why the noise prediction model becomes the score function.</p>
+<p>In the next section, we will consider a simple case and try to intuitively understand why denoising becomes an estimation of the score function.</p>
+</div>
+<div class="tabbed-block">
+<p>やはりなぜノイズ予測モデルがスコア関数になるのか狐につままれたような気持ちになります。</p>
+<p>そこで次節では簡単なケースを考えて、なぜデノイジングがスコア関数の推定になるのかを直感的に理解していきたいと思います。</p>
+</div>
+</div>
+</div>
+<h2 id="bayesian-interpretation-of-why-the-noise-prediction-model-denoising-model-can-estimate-the-score-function">Bayesian Interpretation of Why the Noise Prediction Model (Denoising Model) Can Estimate the Score Function</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="10:2"><input checked="checked" id="__tabbed_10_1" name="__tabbed_10" type="radio" /><input id="__tabbed_10_2" name="__tabbed_10" type="radio" /><div class="tabbed-labels"><label for="__tabbed_10_1">en</label><label for="__tabbed_10_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Here, we consider a simple case to intuitively understand why denoising becomes an estimation of the score function.</p>
+<p>First, to consider the denoising problem, we consider the following naive one-dimensional case:</p>
+</div>
+<div class="tabbed-block">
+<p>さて、ここでは簡単なケースを考えて、なぜデノイジングがスコア関数の推定になるのかを直感的に理解していきます。</p>
+<p>まず、デノイジングの問題を考えるために次の素朴な1次元のケースを考えます:</p>
+</div>
+</div>
+</div>
+<div class="arithmatex">\[
+\tilde{x} = x + \varepsilon,
+\]</div>
+<div class="tabbed-set tabbed-alternate" data-tabs="11:2"><input checked="checked" id="__tabbed_11_1" name="__tabbed_11" type="radio" /><input id="__tabbed_11_2" name="__tabbed_11" type="radio" /><div class="tabbed-labels"><label for="__tabbed_11_1">en</label><label for="__tabbed_11_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>where <span class="arithmatex">\(x \in \mathbb{R} \sim p(x)=:f(x)\)</span>, <span class="arithmatex">\(\varepsilon \sim \mathcal{N}(0, \sigma^2)\)</span>, and <span class="arithmatex">\(x \perp \varepsilon\)</span>.</p>
+<p>This represents the process of adding noise to the original sample in denoising score matching.
+The problem we want to consider here is the denoising problem, where we estimate <span class="arithmatex">\(\varepsilon\)</span> given <span class="arithmatex">\(\tilde{x}\)</span>.
+We will see that solving this problem leads to estimating the score function of <span class="arithmatex">\(p(x)\)</span>.
+Let's scale <span class="arithmatex">\(\varepsilon\)</span> by <span class="arithmatex">\(e = \varepsilon / \sigma^2\)</span>. Then, the above case can be rewritten as follows:</p>
+</div>
+<div class="tabbed-block">
+<p>ただし、<span class="arithmatex">\(x \in \mathbb{R} \sim p(x)=:f(x)\)</span>、<span class="arithmatex">\(\varepsilon \sim \mathcal{N}(0, \sigma^2)\)</span>, <span class="arithmatex">\(x \perp \varepsilon\)</span>。</p>
+<p>これはデノイジングスコアマッチングにおいてオリジナルのサンプルにノイズを付与する過程を表しています。
+ここで考えたい問題はデノイジング、<span class="arithmatex">\(\tilde{x}\)</span> が与えられた状況で <span class="arithmatex">\(\varepsilon\)</span> を推定する問題です。
+この問題を解くことが <span class="arithmatex">\(p(x)\)</span> のスコア関数を推定することになることを見ていきます。
+<span class="arithmatex">\(\varepsilon\)</span> を <span class="arithmatex">\(e = \varepsilon / \sigma^2\)</span> でスケーリングしておきます。すると、上記のケースは下記のように書き換えられます:</p>
+</div>
+</div>
+</div>
+<div class="arithmatex">\[
+\tilde{x} = x + \sigma^2 e,
+\]</div>
+<div class="tabbed-set tabbed-alternate" data-tabs="12:2"><input checked="checked" id="__tabbed_12_1" name="__tabbed_12" type="radio" /><input id="__tabbed_12_2" name="__tabbed_12" type="radio" /><div class="tabbed-labels"><label for="__tabbed_12_1">en</label><label for="__tabbed_12_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>where <span class="arithmatex">\(e \sim \mathcal{N}(0, \sigma^{-2})\)</span>, and <span class="arithmatex">\(x \perp e\)</span>.</p>
+<p>Now, let's consider the problem of estimating <span class="arithmatex">\(e\)</span> given <span class="arithmatex">\(\tilde{x}\)</span>.
+Using the Bayes' theorem with <span class="arithmatex">\(x \sim p(x)\)</span> and <span class="arithmatex">\(\tilde{x} = x + \sigma^2 e\)</span>, the posterior distribution of <span class="arithmatex">\(e\)</span> is expressed as follows.</p>
+</div>
+<div class="tabbed-block">
+<p>ただし、<span class="arithmatex">\(e \sim \mathcal{N}(0, \sigma^{-2})\)</span>, <span class="arithmatex">\(x \perp e\)</span>。</p>
+<p>さて、このとき、<span class="arithmatex">\(\tilde{x}\)</span> が与えられた状況で <span class="arithmatex">\(e\)</span> を推定する問題を考えてみましょう。
+<span class="arithmatex">\(x \sim p(x)\)</span> および <span class="arithmatex">\(\tilde{x} = x + \sigma^2 e\)</span> に注意してベイズの定理を使うと <span class="arithmatex">\(e\)</span> の事後分布は次のように表されます。</p>
+</div>
+</div>
+</div>
+<div class="arithmatex">\[
+\begin{matrix}
+p(e|\tilde{x}) &amp; \propto &amp; p(\tilde{x}|e)p(e) \\
+&amp; = &amp; f(\tilde{x} - \sigma^2 e)\mathcal{N}(e|0, \sigma^{-2}) \\
+\end{matrix}
+\]</div>
+<div class="tabbed-set tabbed-alternate" data-tabs="13:2"><input checked="checked" id="__tabbed_13_1" name="__tabbed_13" type="radio" /><input id="__tabbed_13_2" name="__tabbed_13" type="radio" /><div class="tabbed-labels"><label for="__tabbed_13_1">en</label><label for="__tabbed_13_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Now, let's use this posterior distribution to perform MAP estimation of <span class="arithmatex">\(e\)</span>. The MAP estimation of <span class="arithmatex">\(e\)</span> can be calculated as follows.</p>
+</div>
+<div class="tabbed-block">
+<p>さて、この事後分布を使って MAP 推定してみましょう。
+<span class="arithmatex">\(e\)</span> のMAP推定は次のように計算できます。</p>
+</div>
+</div>
+</div>
+<div class="arithmatex">\[
+\begin{matrix}
+\hat{e} &amp; = &amp; \arg\max_e p(e|\tilde{x}) \\
+&amp;=&amp; \arg\max_e \log p(e|\tilde{x}) &amp; (\because\;\log\;{\rm is}\;{\rm monotonically}\;{\rm increasing}) \\
+&amp;=&amp; \arg\max_e \log f(\tilde{x} - \sigma^2 e) + \log \mathcal{N}(e|0, \sigma^{-2}) &amp; (\because\;{\rm the}\;{\rm Bayes}\;{\rm rule}) \\
+&amp;=&amp; \arg\max_e \log f(\tilde{x} - \sigma^2 e) - \frac{1}{2}\sigma^2e^2 \\
+\end{matrix}
+\]</div>
+<div class="tabbed-set tabbed-alternate" data-tabs="14:2"><input checked="checked" id="__tabbed_14_1" name="__tabbed_14" type="radio" /><input id="__tabbed_14_2" name="__tabbed_14" type="radio" /><div class="tabbed-labels"><label for="__tabbed_14_1">en</label><label for="__tabbed_14_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Then, from the first-order condition of <span class="arithmatex">\(\hat{e}\)</span>'s optimality, the following equation holds.</p>
+</div>
+<div class="tabbed-block">
+<p>そして、<span class="arithmatex">\(\hat{e}\)</span> の最適性の1次の条件より、 次の式が成り立ちます</p>
+</div>
+</div>
+</div>
+<div class="arithmatex">\[
+\begin{matrix}
+0 &amp; = &amp; \frac{\rm d}{{\rm d}e} \left( \log f(\tilde{x} - \sigma^2 e) - \frac{1}{2}\sigma^2e^2 \right)|_{e=\hat{e}} \\
+&amp; = &amp; -\sigma^2 \frac{f^\prime(\tilde{x} - \sigma^2 \hat{e})}{f(\tilde{x} - \sigma^2 \hat{e})} - \sigma^2 \hat{e} \\
+\end{matrix}
+\]</div>
+<div class="tabbed-set tabbed-alternate" data-tabs="15:2"><input checked="checked" id="__tabbed_15_1" name="__tabbed_15" type="radio" /><input id="__tabbed_15_2" name="__tabbed_15" type="radio" /><div class="tabbed-labels"><label for="__tabbed_15_1">en</label><label for="__tabbed_15_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Therefore, <span class="arithmatex">\(\hat{e}\)</span> is expressed as follows.</p>
+</div>
+<div class="tabbed-block">
+<p>したがって、<span class="arithmatex">\(\hat{e}\)</span> は次のように表されます。</p>
+</div>
+</div>
+</div>
+<div class="arithmatex">\[
+\hat{e} = -\frac{f^\prime(\tilde{x} - \sigma^2 \hat{e})}{f(\tilde{x} - \sigma^2 \hat{e})} = - \left(\frac{\rm d}{{\rm d}x} \log f\right)(\tilde{x} - \sigma^2 \hat{e}) = - s(\tilde{x} - \sigma^2 \hat{e}),
+\]</div>
+<div class="tabbed-set tabbed-alternate" data-tabs="16:2"><input checked="checked" id="__tabbed_16_1" name="__tabbed_16" type="radio" /><input id="__tabbed_16_2" name="__tabbed_16" type="radio" /><div class="tabbed-labels"><label for="__tabbed_16_1">en</label><label for="__tabbed_16_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>where <span class="arithmatex">\(s(x)\)</span> is the score function of <span class="arithmatex">\(p(x)=f(x)\)</span>.</p>
+<p>Thus, it is understood that the MAP estimation of <span class="arithmatex">\(e\)</span> in denoising is expressed using the score function.
+However, the above is MAP estimation. On the other hand, denoising score matching uses the least squares method. There is still a gap from this perspective.</p>
+<p>Next, let's consider how the posterior distribution <span class="arithmatex">\(p(e|\tilde{x})\)</span> in the case where <span class="arithmatex">\(\sigma\)</span> is sufficiently small can be approximated.
+Note that <span class="arithmatex">\(e = \mathcal{O}(\sigma^{-1})\)</span> because <span class="arithmatex">\(e \sim \mathcal{N}(0, \sigma^{-2})\)</span>.
+By performing a Taylor expansion for <span class="arithmatex">\(\log p(e|\tilde{x}) = \log f(\tilde{x} - \sigma^2 e) - \frac{1}{2}\sigma^2e^2 + {\rm const.}\)</span>, and approximating it as a quadratic function of <span class="arithmatex">\(e\)</span> while ignoring <span class="arithmatex">\(\mathcal{O}(\sigma^3)\)</span> (<span class="arithmatex">\(\sigma^6 e^3\)</span>, etc.), we obtain the following result.</p>
+</div>
+<div class="tabbed-block">
+<p>ただし、<span class="arithmatex">\(s(x)\)</span> は <span class="arithmatex">\(p(x)=f(x)\)</span> のスコア関数です。</p>
+<p>さて、以上からデノイジングの <span class="arithmatex">\(e\)</span> の MAP 推定がスコア関数を用いて表現されることがわかりました。
+ただ、上記は MAP 推定であり、デノイジングスコアマッチングにおいては最小二乗法。この観点でまだギャップがあります。</p>
+<p>ここで <span class="arithmatex">\(\sigma\)</span> が十分に小さい場合の上記の事後分布 <span class="arithmatex">\(p(e|\tilde{x})\)</span> がどのように近似できるか考えてみましょう。
+<span class="arithmatex">\(e \sim \mathcal{N}(0, \sigma^{-2})\)</span> より <span class="arithmatex">\(e = \mathcal{O}(\sigma^{-1})\)</span> にも気を付けながら、<span class="arithmatex">\(\log p(e|\tilde{x}) = \log f(\tilde{x} - \sigma^2 e) - \frac{1}{2}\sigma^2e^2 + {\rm const.}\)</span> に対してテイラー展開を行い、<span class="arithmatex">\(\mathcal{O}(\sigma^3)\)</span> (<span class="arithmatex">\(\sigma^6 e^3\)</span> など) を無視しつつ、<span class="arithmatex">\(e\)</span> の二次関数として近似してみると、下記の結果が得られます。</p>
+</div>
+</div>
+</div>
+<div class="arithmatex">\[
+\log p(e|\tilde{x}) \approx \log \mathcal{N}\left(e|-(\frac{\rm d}{{\rm d}x}\log f)(\tilde{x}), \sigma^{-2}\right)
+\]</div>
+<details class="warning">
+<summary>Warning</summary>
+<div class="tabbed-set tabbed-alternate" data-tabs="17:2"><input checked="checked" id="__tabbed_17_1" name="__tabbed_17" type="radio" /><input id="__tabbed_17_2" name="__tabbed_17" type="radio" /><div class="tabbed-labels"><label for="__tabbed_17_1">en</label><label for="__tabbed_17_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>The detailed derivation is as follows, but no certainty that it is correct.</p>
+</div>
+<div class="tabbed-block">
+<p>詳細な導出は以下ですが、正しいかどうかは不確かです。</p>
+</div>
+</div>
+</div>
+<div class="arithmatex">\[
+\begin{matrix}
+\log p(e|\tilde{x}) &amp; = &amp; \log f(\tilde{x} - \sigma^2 e) - \frac{1}{2}\sigma^2e^2 + {\rm const.}\\
+&amp; = &amp; \log f(\tilde{x}) - (\frac{\rm d}{{\rm d}x}\log f)(\tilde{x})\sigma^2 e + \frac{1}{2}(\frac{\rm d^2}{{\rm d}x^2}\log f)(\tilde{x})\sigma^4 e^2+ \mathcal{O}(\sigma^6e^3)- \frac{1}{2}\sigma^2e^2 + {\rm const.} &amp; (\because\;{\rm Taylor}\;{\rm expansion}, e=\mathcal{O}(\sigma^{-1}))\\
+&amp; = &amp; - \frac{1}{2}\left(1-(\frac{\rm d^2}{{\rm d}x^2}\log f)(\tilde{x})\sigma^2\right)\sigma^2e^2 - (\frac{\rm d}{{\rm d}x}\log f)(\tilde{x})\sigma^2 e + \mathcal{O}(\sigma^6e^3) + {\rm const.}(\tilde{x}) \\
+&amp; = &amp; - \frac{1}{2}\left(1-(\frac{\rm d^2}{{\rm d}x^2}\log f)(\tilde{x})\sigma^2\right)\sigma^2\left(e + \frac{(\frac{\rm d}{{\rm d}x}\log f)(\tilde{x})}{1-(\frac{\rm d^2}{{\rm d}x^2}\log f)(\tilde{x})\sigma^2}\right)^2 + \mathcal{O}(\sigma^2)+\mathcal{O}(\sigma^6e^3) + {\rm const.} \\
+&amp; = &amp; - \frac{1}{2}\left(\sigma^2 + \mathcal{O}(\sigma^4)\right)\left(e + (\frac{\rm d}{{\rm d}x}\log f)(\tilde{x})+\mathcal{O}(\sigma^2)\right)^2 + \mathcal{O}(\sigma^2)+\mathcal{O}(\sigma^6e^3) + {\rm const.} \\
+&amp; = &amp; \log \mathcal{N}\left(e|-(\frac{\rm d}{{\rm d}x}\log f)(\tilde{x})+\mathcal{O}(\sigma^2), \frac{\sigma^{-2}}{1+\mathcal{O}(\sigma^2)}\right) + \mathcal{O}(\sigma^6e^3) + {\rm const.} \\
+&amp; = &amp; \log \mathcal{N}\left(e|-(\frac{\rm d}{{\rm d}x}\log f)(\tilde{x})+\mathcal{O}(\sigma^2), \sigma^{-2} + \mathcal{O}(1)\right) + \mathcal{O}(\sigma^6e^3) + {\rm const.} \\
+\end{matrix}
+\]</div>
+</details>
+<div class="tabbed-set tabbed-alternate" data-tabs="18:2"><input checked="checked" id="__tabbed_18_1" name="__tabbed_18" type="radio" /><input id="__tabbed_18_2" name="__tabbed_18" type="radio" /><div class="tabbed-labels"><label for="__tabbed_18_1">en</label><label for="__tabbed_18_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>In other words, it can be confirmed that the posterior distribution $p(e|\tilde{x}) in the case where <span class="arithmatex">\(\sigma\)</span> is sufficiently small can be approximated by a Gaussian distribution with the score function as the mean.
+As a result, it can be naturally interpreted that in denoising score matching, the score function can be estimated by estimating the noise using a least squares method.
+Furthermore, it can be understood that the weight for performing denoising score matching for various <span class="arithmatex">\(\sigma\)</span> simultaneously is $\sigma^2, based on the fact that the variance of the Gaussian distribution is <span class="arithmatex">\(\sigma^{-2}\)</span>. This is consistent with the selection of weights based on empirical results in (Y. Song and S. Ermon, 2019)<sup id="fnref:4"><a class="footnote-ref" href="#fn:4">4</a></sup>.</p>
+<p>Thus, it has been intuitively understood that estimating noise in denoising score matching becomes an estimation of the score function from the perspective of maximizing the posterior distribution <span class="arithmatex">\(p(e|\tilde{x})\)</span>.</p>
+<p>In particular, when <span class="arithmatex">\(\sigma\)</span> is sufficiently small, it has been obtained that the least squares method in denoising score matching becomes a least squares method with the noise intensity <span class="arithmatex">\(\sigma^2\)</span> as the weight, based on the fact that the posterior distribution <span class="arithmatex">\(p(e|\tilde{x})\)</span> can be approximated by a Gaussian distribution with the score function as the mean and <span class="arithmatex">\(\sigma^{-2}\)</span> as the variance.</p>
+</div>
+<div class="tabbed-block">
+<p>つまり、<span class="arithmatex">\(\sigma\)</span> が十分に小さい場合の上記の事後分布 <span class="arithmatex">\(p(e|\tilde{x})\)</span> がスコア関数を平均とするガウス分布で近似できることが確認できます。
+この結果、デノイジングスコアマッチングにおいては最小二乗法的なアプローチにより、ノイズを推定することでスコア関数を推定することができることが自然と解釈することができます
+また、ガウス分布の分散が <span class="arithmatex">\(\sigma^{-2}\)</span> であることから、様々な <span class="arithmatex">\(\sigma\)</span> に対するデノイジングスコアマッチングを同時に行う際の重みが <span class="arithmatex">\(\sigma^2\)</span> であることもわかります。これは <a href="">Y. Song and S. Ermon(2019)</a> の経験的な結果に基づく重みの選択とも合致しています。</p>
+<p>以上により、デノイジングスコアマッチングでノイズを推定することが、事後分布 <span class="arithmatex">\(p(e|\tilde{x})\)</span> の最大化の観点でスコア関数の推定になることが直感的に理解できました。</p>
+<p>特に <span class="arithmatex">\(\sigma\)</span> が十分に小さい場合には、事後分布 <span class="arithmatex">\(p(e|\tilde{x})\)</span> がスコア関数を平均、<span class="arithmatex">\(\sigma^{-2}\)</span>を分散とするガウス分布で近似できることから、デノイジングスコアマッチングにおける最小二乗法的なアプローチが、ノイズ強度<span class="arithmatex">\(\sigma^2\)</span>を重みとした最小二乗法となるという描像が得られました。</p>
+</div>
+</div>
+</div>
+<!-- ### ノイズ予測モデルの構築（デノイジング）がなぜスコア関数の推定になるのか解釈の数値的な検証 -->
+<h2 id="numerical-verification-of-the-interpretation">Numerical Verification of the Interpretation</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="19:2"><input checked="checked" id="__tabbed_19_1" name="__tabbed_19" type="radio" /><input id="__tabbed_19_2" name="__tabbed_19" type="radio" /><div class="tabbed-labels"><label for="__tabbed_19_1">en</label><label for="__tabbed_19_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>In this section, we will numerically examine that the posterior distribution of noise seen above can be approximated by a Gaussian distribution with the negative of the score function as the mean.</p>
+</div>
+<div class="tabbed-block">
+<p>本節では上記で見たノイズの事後分布がスコア関数の負を平均値とするガウス分布で近似できることを数値的に見ていきます。</p>
+</div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="20:2"><input checked="checked" id="__tabbed_20_1" name="__tabbed_20" type="radio" /><input id="__tabbed_20_2" name="__tabbed_20" type="radio" /><div class="tabbed-labels"><label for="__tabbed_20_1">en</label><label for="__tabbed_20_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>The code provided in this article is intended to demonstrate the operation in a specific environment and under specific conditions, and may not work the same in all environments or cases. Also, software updates and compatibility issues may occur over time, so the code provided may not be up to date. Use of this code is at the reader's own risk. Before executing, make sure you understand the code well and adapt it to your environment as needed. Also, don't forget to back up as much as possible. If you have any questions or suggestions for improvement regarding the content or code of this article, please let us know in the comments or on social media.</p>
+</div>
+<div class="tabbed-block">
+<p>本記事で提供されているコードは、特定の環境や条件下での動作を示すものであり、全ての環境やケースで同様に機能するとは限りません。また、時間の経過とともにソフトウェアの更新や互換性の問題が生じる可能性があるため、掲載されているコードが最新の状態であるとは限りません。本コードの使用は、読者の責任において行ってください。実行する前に、コードをよく理解し、必要に応じて環境に適合させることを推奨します。また、可能な限りバックアップを取ることを忘れないでください。本記事の内容やコードに関する質問や改善提案があれば、コメント欄やソーシャルメディアを通じてお知らせください。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">python</span> <span class="o">-</span><span class="n">V</span>
+<span class="c1"># %pip intall numpy==2.1.3 sympy==1.13.3 matplotlib==3.9.2 pandas==2.2.3 scipy==1.14.1</span>
+</code></pre></div>
+<pre><code>Python 3.11.5
+</code></pre>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">kstest</span><span class="p">,</span> <span class="n">norm</span>
+<span class="kn">import</span> <span class="nn">sympy</span>
+
+<span class="c1"># fix seed</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># symbols for sympy</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">e</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;e&#39;</span><span class="p">)</span>
+<span class="n">tildex</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;tildex&#39;</span><span class="p">)</span>  <span class="c1"># tildex = x + e</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;sigma&#39;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="numerical-verification-using-analytically-calculated-posterior-distribution">Numerical verification using analytically calculated posterior distribution</h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="21:2"><input checked="checked" id="__tabbed_21_1" name="__tabbed_21" type="radio" /><input id="__tabbed_21_2" name="__tabbed_21" type="radio" /><div class="tabbed-labels"><label for="__tabbed_21_1">en</label><label for="__tabbed_21_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>First, let's analytically calculate <span class="arithmatex">\(p(e|\tilde{x})\)</span> without generating data, and see that the score function can be approximated by MAP estimation of <span class="arithmatex">\(e\)</span> when <span class="arithmatex">\(\sigma\)</span> is sufficiently small, and that <span class="arithmatex">\(p(e|\tilde{x})\)</span> can be approximated by <span class="arithmatex">\(\mathcal{N}(e|-s(\tilde{x}), \sigma^{-2})\)</span>, where <span class="arithmatex">\(s(x):=\nabla_x \log p(x)\)</span>.</p>
+</div>
+<div class="tabbed-block">
+<p>まずはデータを生成せずに <span class="arithmatex">\(p(e|\tilde{x})\)</span> を解析的に計算して、<span class="arithmatex">\(\sigma\)</span> が十分に小さい時に MAP 推定でスコア関数を近似できること、および、<span class="arithmatex">\(p(e|\tilde{x})\)</span> が <span class="arithmatex">\(\mathcal{N}(e|-s(\tilde{x}), \sigma^{-2})\)</span> で近似できることを見ていきましょう（ただし、<span class="arithmatex">\(s(x):=\nabla_x \log p(x)\)</span>）。</p>
+</div>
+</div>
+</div>
+<details>
+
+<summary> The method of numerical verification by visualizing the posterior distribution $p(e|\tilde{x})$ </summary>
+
+
+
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">plot_numerical_verification</span><span class="p">(</span>
+    <span class="n">sympy_p_x</span><span class="p">,</span>
+    <span class="n">sympy_p_e_posterior</span><span class="p">,</span>
+    <span class="n">sympy_negative_score_function</span><span class="p">,</span>
+    <span class="n">sigma_val</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">tildex_vals</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span>
+    <span class="n">e_vals</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
+    <span class="n">axs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">fewer_e_vals</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span>
+<span class="p">):</span>
+    <span class="n">tildex_mesh</span><span class="p">,</span> <span class="n">e_mesh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">tildex_vals</span><span class="p">,</span> <span class="n">e_vals</span><span class="p">)</span>
+    <span class="n">p_e_posterior_vals</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">lambdify</span><span class="p">((</span><span class="n">tildex</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">sigma</span><span class="p">),</span> <span class="n">sympy_p_e_posterior</span><span class="p">,</span> <span class="s1">&#39;numpy&#39;</span><span class="p">)(</span><span class="n">tildex_mesh</span><span class="p">,</span> <span class="n">e_mesh</span><span class="p">,</span> <span class="n">sigma_val</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">axs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">16</span><span class="p">))</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;p(x)=</span><span class="si">{</span><span class="n">sympy_p_x</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;posterior distribution p(e|tildex) without Z with sigma=</span><span class="si">{</span><span class="n">sigma_val</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">tildex_mesh</span><span class="p">,</span> <span class="n">e_mesh</span><span class="p">,</span> <span class="n">p_e_posterior_vals</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;p(e|tildex) without Z&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tildex_vals</span><span class="p">,</span> <span class="n">sympy</span><span class="o">.</span><span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sympy_negative_score_function</span><span class="p">)(</span><span class="n">tildex_vals</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;score function for </span><span class="se">\\</span><span class="s2">tilde</span><span class="si">{x}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">tilde</span><span class="si">{x}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;e&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">tildex_vals</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">tildex_vals</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">e_vals</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">e_vals</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;MAP Estimation of e vs Score Function with sigma=</span><span class="si">{</span><span class="n">sigma_val</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">tildex_mesh</span><span class="p">,</span> <span class="n">e_mesh</span><span class="p">,</span> <span class="n">p_e_posterior_vals</span><span class="o">/</span><span class="n">p_e_posterior_vals</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">levels</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;p(e|</span><span class="se">\\</span><span class="s1">tilde</span><span class="si">{x}</span><span class="s1">)/max_e p(e|</span><span class="se">\\</span><span class="s1">tilde</span><span class="si">{x}</span><span class="s1">)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tildex_vals</span><span class="p">,</span> <span class="n">e_vals</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">p_e_posterior_vals</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)],</span> <span class="s1">&#39;bo&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;argmax_e p(e|xi) for </span><span class="se">\\</span><span class="s1">tilde</span><span class="si">{x}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tildex_vals</span><span class="p">,</span> <span class="n">sympy</span><span class="o">.</span><span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sympy_negative_score_function</span><span class="p">)(</span><span class="n">tildex_vals</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;score function for </span><span class="se">\\</span><span class="s2">tilde</span><span class="si">{x}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">tilde</span><span class="si">{x}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;e&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">tildex_vals</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">tildex_vals</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">e_vals</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">e_vals</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Posterior Distribution are approximated by Normal Distribution with sigma=</span><span class="si">{</span><span class="n">sigma_val</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">axd</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_tildex_val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fewer_e_vals</span><span class="p">):</span>
+        <span class="c1"># plot p(e|tildex)</span>
+        <span class="n">_p</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">lambdify</span><span class="p">((</span><span class="n">e</span><span class="p">,</span> <span class="n">tildex</span><span class="p">,</span> <span class="n">sigma</span><span class="p">),</span> <span class="n">sympy_p_e_posterior</span><span class="p">)(</span><span class="n">e_vals</span><span class="p">,</span> <span class="n">_tildex_val</span><span class="p">,</span> <span class="n">sigma_val</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">e_vals</span><span class="p">,</span> <span class="n">_p</span><span class="o">/</span><span class="n">_p</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;tildex=</span><span class="si">{</span><span class="n">_tildex_val</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="c1"># plot N(e|score(tildex), \sigma^{-2})</span>
+        <span class="n">axd</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">e_vals</span><span class="p">,</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">e_vals</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">sympy</span><span class="o">.</span><span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sympy_negative_score_function</span><span class="p">)(</span><span class="n">_tildex_val</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="n">sigma_val</span><span class="p">),</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;tildex=</span><span class="si">{</span><span class="n">_tildex_val</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;e&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;p(e|tilde_x) / max_e p(e|tilde_x)&#39;</span><span class="p">)</span>
+    <span class="n">axd</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;N(e|score(tilde_x), </span><span class="se">\\</span><span class="s1">sigma^{-2})&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
+    <span class="n">axd</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+</details>
+
+<h4 id="case-1-the-standard-normal-distribution">Case 1: The standard normal distribution</h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="22:2"><input checked="checked" id="__tabbed_22_1" name="__tabbed_22" type="radio" /><input id="__tabbed_22_2" name="__tabbed_22" type="radio" /><div class="tabbed-labels"><label for="__tabbed_22_1">en</label><label for="__tabbed_22_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>First, let's consider the case where <span class="arithmatex">\(p(x)\)</span> is the standard normal distribution, i.e., <span class="arithmatex">\(p(x) = \mathcal{N}(x|0, 1)\)</span>.</p>
+</div>
+<div class="tabbed-block">
+<p>まずは <span class="arithmatex">\(p(x)\)</span> が標準正規分布、すなわち <span class="arithmatex">\(p(x) = \mathcal{N}(x|0, 1)\)</span> の場合を考えます。</p>
+</div>
+</div>
+</div>
+<div class="highlight"><pre><span></span><code><span class="c1"># define pdf of x</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">sympy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sympy</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>  <span class="c1"># normal distribution</span>
+<span class="n">f</span>
+</code></pre></div>
+<p><span class="arithmatex">\(\displaystyle \frac{\sqrt{2} e^{- 0.5 x^{2}}}{2 \sqrt{\pi}}\)</span></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="23:2"><input checked="checked" id="__tabbed_23_1" name="__tabbed_23" type="radio" /><input id="__tabbed_23_2" name="__tabbed_23" type="radio" /><div class="tabbed-labels"><label for="__tabbed_23_1">en</label><label for="__tabbed_23_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>In the following code, we plot the posterior distribution <span class="arithmatex">\(p(e|\tilde{x})\)</span> (left), MAP estimation (center), and the posterior distribution <span class="arithmatex">\(p(e|\tilde{x})\)</span> and <span class="arithmatex">\(\mathcal{N}(e|-s(\tilde{x}), \sigma^{-2})\)</span> (right) for $\sigma = $ 0.1 (top), 0.5 (middle), and 1 (bottom). 
+As a result, we can see that as <span class="arithmatex">\(\sigma\)</span> becomes sufficiently small, the MAP estimation of <span class="arithmatex">\(e\)</span>, i.e., <span class="arithmatex">\(\arg\max _e p(e|\tilde{x})\)</span>, approaches the score function <span class="arithmatex">\(s(\tilde{x})\)</span> (center).
+Also, we can see that as <span class="arithmatex">\(\sigma\)</span> becomes sufficiently small, the posterior distribution <span class="arithmatex">\(p(e|\tilde{x})\)</span> approaches <span class="arithmatex">\(\mathcal{N}(e|-s(\tilde{x}), \sigma^{-2})\)</span> (right).</p>
+</div>
+<div class="tabbed-block">
+<p>下記のコードでは $\sigma = $ 0.1（上段）, 0.5（中断）, 1（下段） に対して、事後分布 <span class="arithmatex">\(p(e|\tilde{x})\)</span>（左）、MAP 推定（中央）、および、事後分布 <span class="arithmatex">\(p(e|\tilde{x})\)</span> と <span class="arithmatex">\(\mathcal{N}(e|-s(\tilde{x}), \sigma^{-2})\)</span>（右）をプロットしています。
+この結果、<span class="arithmatex">\(\sigma\)</span> が十分に小さくなるにつれて <span class="arithmatex">\(e\)</span> の MAP 推定、つまり <span class="arithmatex">\(\arg\max _e p(e|\tilde{x})\)</span> がスコア関数 <span class="arithmatex">\(s(\tilde{x})\)</span> に近づいていく様子を確認することができます（中央）。
+また、<span class="arithmatex">\(\sigma\)</span> が十分に小さくなるにつれて、事後分布 <span class="arithmatex">\(p(e|\tilde{x})\)</span> が <span class="arithmatex">\(\mathcal{N}(e|-s(\tilde{x}), \sigma^{-2})\)</span> に近づいていく様子を確認することができます（右）。</p>
+</div>
+</div>
+</div>
+<div class="highlight"><pre><span></span><code><span class="c1"># set the true distribution p(x) = f(x)</span>
+<span class="n">p_x</span> <span class="o">=</span> <span class="n">f</span>
+<span class="c1"># define pdf of e: p(e) = N(e|0, sigma^{-2})</span>
+<span class="n">p_e</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">e</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">sigma</span> <span class="o">/</span> <span class="n">sympy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sympy</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+<span class="c1"># calculate the posterior distribution: p(e|\tilde{x}) \propto p(e) p(\tilde{x}|e)</span>
+<span class="n">p_e_posterior</span> <span class="o">=</span> <span class="n">p_e</span> <span class="o">*</span> <span class="n">p_x</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tildex</span> <span class="o">-</span> <span class="n">sigma</span><span class="o">*</span><span class="n">sigma</span><span class="o">*</span><span class="n">e</span><span class="p">)</span>
+<span class="c1"># calculate the negative score function</span>
+<span class="n">logf</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="n">dlogf</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">logf</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>  <span class="c1"># score function</span>
+<span class="n">dU</span> <span class="o">=</span> <span class="o">-</span><span class="n">dlogf</span>  <span class="c1"># negative score function. Note: U is the energy function</span>
+
+<span class="c1"># plot the numerical verification</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">axs_</span><span class="p">,</span> <span class="n">sigma_val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axs</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]):</span>
+    <span class="n">plot_numerical_verification</span><span class="p">(</span>
+        <span class="n">p_x</span><span class="p">,</span>
+        <span class="n">p_e_posterior</span><span class="p">,</span>
+        <span class="n">dU</span><span class="p">,</span>
+        <span class="n">sigma_val</span> <span class="o">=</span> <span class="n">sigma_val</span><span class="p">,</span>
+        <span class="n">tildex_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span>
+        <span class="n">e_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
+        <span class="n">axs</span><span class="o">=</span><span class="n">axs_</span><span class="p">,</span>
+        <span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span>
+        <span class="n">fewer_e_vals</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+    <span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<pre><code>/tmp/ipykernel_2728231/3909665571.py:22: UserWarning: The following kwargs were not used by contour: 'label'
+  ax.contourf(tildex_mesh, e_mesh, p_e_posterior_vals, levels=100, label='p(e|tildex) without Z')
+/tmp/ipykernel_2728231/3909665571.py:32: UserWarning: The following kwargs were not used by contour: 'label'
+  ax.contourf(tildex_mesh, e_mesh, p_e_posterior_vals/p_e_posterior_vals.max(axis=0), levels=100, label='p(e|\\tilde{x})/max_e p(e|\\tilde{x})')
+</code></pre>
+<p><img alt="png" src="../../../../denoising-score-matching-bayesian-interpretation_files/denoising-score-matching-bayesian-interpretation_14_1.png" /></p>
+<h4 id="case-2-a-mixture-of-two-normal-distributions">Case 2: A mixture of two normal distributions</h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="24:2"><input checked="checked" id="__tabbed_24_1" name="__tabbed_24" type="radio" /><input id="__tabbed_24_2" name="__tabbed_24" type="radio" /><div class="tabbed-labels"><label for="__tabbed_24_1">en</label><label for="__tabbed_24_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Second, let's consider the case where <span class="arithmatex">\(p(x)\)</span> is the mixture of two normal distributions, i.e., <span class="arithmatex">\(p(x) = 0.5\mathcal{N}(x|0, 1) + 0.5\mathcal{N}(x|5, 1)\)</span> to see whether the above results hold in a more complex distribution.</p>
+</div>
+<div class="tabbed-block">
+<p>次に、<span class="arithmatex">\(p(x)\)</span> が2つの正規分布の混合、すなわち <span class="arithmatex">\(p(x) = 0.5\mathcal{N}(x|0, 1) + 0.5\mathcal{N}(x|5, 1)\)</span> の場合を考え、より複雑な分布でも上記の結果が成り立つかどうかを見ていきます。</p>
+</div>
+</div>
+</div>
+<div class="highlight"><pre><span></span><code><span class="c1"># define pdf of x</span>
+<span class="c1"># 2 modal gaussian distribution</span>
+<span class="n">f</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sympy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">sympy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sympy</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sympy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">sympy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sympy</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+<span class="n">f</span>
+</code></pre></div>
+<p><span class="arithmatex">\(\displaystyle \frac{0.25 \sqrt{2} e^{- 0.5 \left(x + 2\right)^{2}}}{\sqrt{\pi}} + \frac{0.25 \sqrt{2} e^{- 0.5 \left(x - 2\right)^{2}}}{\sqrt{\pi}}\)</span></p>
+<div class="highlight"><pre><span></span><code><span class="n">p_x</span> <span class="o">=</span> <span class="n">f</span>
+<span class="c1"># define pdf of e: p(e) = N(e|0, sigma^{-2})</span>
+<span class="n">p_e</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">e</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">sigma</span> <span class="o">/</span> <span class="n">sympy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sympy</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+<span class="c1"># calculate the posterior distribution: p(e|\tilde{x}) \propto p(e) p(\tilde{x}|e)</span>
+<span class="n">p_e_posterior</span> <span class="o">=</span> <span class="n">p_e</span> <span class="o">*</span> <span class="n">p_x</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tildex</span> <span class="o">-</span> <span class="n">sigma</span><span class="o">*</span><span class="n">sigma</span><span class="o">*</span><span class="n">e</span><span class="p">)</span>
+
+<span class="c1"># calculate the negative score function</span>
+<span class="n">logf</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="n">dlogf</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">logf</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>  <span class="c1"># score function</span>
+<span class="n">dU</span> <span class="o">=</span> <span class="o">-</span><span class="n">dlogf</span>  <span class="c1"># negative score function. Note: U is the energy function</span>
+
+<span class="c1"># plot the numerical verification</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">axs_</span><span class="p">,</span> <span class="n">sigma_val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axs</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]):</span>
+    <span class="n">plot_numerical_verification</span><span class="p">(</span>
+        <span class="n">p_x</span><span class="p">,</span>
+        <span class="n">p_e_posterior</span><span class="p">,</span>
+        <span class="n">dU</span><span class="p">,</span>
+        <span class="n">sigma_val</span> <span class="o">=</span> <span class="n">sigma_val</span><span class="p">,</span>
+        <span class="n">tildex_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span>
+        <span class="n">e_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
+        <span class="n">axs</span><span class="o">=</span><span class="n">axs_</span><span class="p">,</span>
+        <span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span>
+        <span class="n">fewer_e_vals</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+    <span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<pre><code>/tmp/ipykernel_2728231/3909665571.py:22: UserWarning: The following kwargs were not used by contour: 'label'
+  ax.contourf(tildex_mesh, e_mesh, p_e_posterior_vals, levels=100, label='p(e|tildex) without Z')
+/tmp/ipykernel_2728231/3909665571.py:32: UserWarning: The following kwargs were not used by contour: 'label'
+  ax.contourf(tildex_mesh, e_mesh, p_e_posterior_vals/p_e_posterior_vals.max(axis=0), levels=100, label='p(e|\\tilde{x})/max_e p(e|\\tilde{x})')
+</code></pre>
+<p><img alt="png" src="../../../../denoising-score-matching-bayesian-interpretation_files/denoising-score-matching-bayesian-interpretation_17_1.png" /></p>
+<h4 id="case-3-the-standard-cauchy-distribution">Case 3: The standard Cauchy distribution</h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="25:2"><input checked="checked" id="__tabbed_25_1" name="__tabbed_25" type="radio" /><input id="__tabbed_25_2" name="__tabbed_25" type="radio" /><div class="tabbed-labels"><label for="__tabbed_25_1">en</label><label for="__tabbed_25_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Third, let's consider the case where <span class="arithmatex">\(p(x)\)</span> is the Cauchy distribution, i.e., <span class="arithmatex">\(p(x) = \frac{1}{\pi(1+x^2)}\)</span> to see whether the above results hold in a distribution with heavy tails.</p>
+</div>
+<div class="tabbed-block">
+<p>3つ目の例として、<span class="arithmatex">\(p(x)\)</span> がコーシー分布、すなわち <span class="arithmatex">\(p(x) = \frac{1}{\pi(1+x^2)}\)</span> の場合を考え、裾の重い分布でも上記の結果が成り立つかどうかを見ていきます。</p>
+</div>
+</div>
+</div>
+<div class="highlight"><pre><span></span><code><span class="c1"># define pdf of x</span>
+<span class="c1"># cauchy distribution</span>
+<span class="n">f</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+<span class="n">f</span>
+</code></pre></div>
+<p><span class="arithmatex">\(\displaystyle \frac{0.318309886183791}{x^{2} + 1}\)</span></p>
+<div class="highlight"><pre><span></span><code><span class="n">p_x</span> <span class="o">=</span> <span class="n">f</span>
+<span class="c1"># define pdf of e: p(e) = N(e|0, sigma^{-2})</span>
+<span class="n">p_e</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">e</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">sigma</span> <span class="o">/</span> <span class="n">sympy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sympy</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+<span class="c1"># calculate the posterior distribution: p(e|\tilde{x}) \propto p(e) p(\tilde{x}|e)</span>
+<span class="n">p_e_posterior</span> <span class="o">=</span> <span class="n">p_e</span> <span class="o">*</span> <span class="n">p_x</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tildex</span> <span class="o">-</span> <span class="n">sigma</span><span class="o">*</span><span class="n">sigma</span><span class="o">*</span><span class="n">e</span><span class="p">)</span>
+
+<span class="c1"># calculate the negative score function</span>
+<span class="n">logf</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="n">dlogf</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">logf</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>  <span class="c1"># score function</span>
+<span class="n">dU</span> <span class="o">=</span> <span class="o">-</span><span class="n">dlogf</span>  <span class="c1"># negative score function. Note: U is the energy function</span>
+
+<span class="c1"># plot the numerical verification</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">axs_</span><span class="p">,</span> <span class="n">sigma_val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axs</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]):</span>
+    <span class="n">plot_numerical_verification</span><span class="p">(</span>
+        <span class="n">p_x</span><span class="p">,</span>
+        <span class="n">p_e_posterior</span><span class="p">,</span>
+        <span class="n">dU</span><span class="p">,</span>
+        <span class="n">sigma_val</span> <span class="o">=</span> <span class="n">sigma_val</span><span class="p">,</span>
+        <span class="n">tildex_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span>
+        <span class="n">e_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
+        <span class="n">axs</span><span class="o">=</span><span class="n">axs_</span><span class="p">,</span>
+        <span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span>
+        <span class="n">fewer_e_vals</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+    <span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<pre><code>/tmp/ipykernel_2728231/3909665571.py:22: UserWarning: The following kwargs were not used by contour: 'label'
+  ax.contourf(tildex_mesh, e_mesh, p_e_posterior_vals, levels=100, label='p(e|tildex) without Z')
+/tmp/ipykernel_2728231/3909665571.py:32: UserWarning: The following kwargs were not used by contour: 'label'
+  ax.contourf(tildex_mesh, e_mesh, p_e_posterior_vals/p_e_posterior_vals.max(axis=0), levels=100, label='p(e|\\tilde{x})/max_e p(e|\\tilde{x})')
+</code></pre>
+<p><img alt="png" src="../../../../denoising-score-matching-bayesian-interpretation_files/denoising-score-matching-bayesian-interpretation_20_1.png" /></p>
+<h4 id="case-4-a-mixture-of-various-distributions">Case 4: A mixture of various distributions</h4>
+<div class="tabbed-set tabbed-alternate" data-tabs="26:2"><input checked="checked" id="__tabbed_26_1" name="__tabbed_26" type="radio" /><input id="__tabbed_26_2" name="__tabbed_26" type="radio" /><div class="tabbed-labels"><label for="__tabbed_26_1">en</label><label for="__tabbed_26_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Finally, let's consider a more complex case where <span class="arithmatex">\(p(x)\)</span> is the mixture of various distributions, a Cauchy distribution, a normal distribution and a hyperbolic secant distribution, i.e., <span class="arithmatex">\(p(x) = 0.3\frac{1}{\pi(1+x^2)} + 0.3\mathcal{N}(x|0, 1) + 0.4\frac{sech(0.5\pi x)}{2}\)</span>.</p>
+</div>
+<div class="tabbed-block">
+<p>最後に、<span class="arithmatex">\(p(x)\)</span> が様々な分布の混合、コーシー分布、正規分布、双曲線関数の逆余接関数分布、すなわち <span class="arithmatex">\(p(x) = 0.3\frac{1}{\pi(1+x^2)} + 0.3\mathcal{N}(x|0, 1) + 0.4\frac{sech(0.5\pi x)}{2}\)</span> の場合を考え、より複雑な分布でも上記の結果が成り立つかどうかを見ていきます。</p>
+</div>
+</div>
+</div>
+<div class="highlight"><pre><span></span><code><span class="c1"># mixed of cauchy distribution, normal distribution and hyperbolic secant distribution</span>
+<span class="n">f</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">+</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">sympy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">sympy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sympy</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">sympy</span><span class="o">.</span><span class="n">sech</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">sympy</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+<span class="n">f</span>
+</code></pre></div>
+<p><span class="arithmatex">\(\displaystyle 0.125 \operatorname{sech}{\left(0.5 \pi x \right)} + \frac{0.125 \sqrt{2} e^{- 0.5 \left(x - 2\right)^{2}}}{\sqrt{\pi}} + \frac{0.159154943091895}{\left(x - 3\right)^{2} + 1}\)</span></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># define pdf of x</span>
+<span class="n">p_x</span> <span class="o">=</span> <span class="n">f</span>
+<span class="c1"># define pdf of e: p(e) = N(e|0, sigma^{-2})</span>
+<span class="n">p_e</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">e</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sigma</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">sigma</span> <span class="o">/</span> <span class="n">sympy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sympy</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+<span class="c1"># calculate the posterior distribution: p(e|\tilde{x}) \propto p(e) p(\tilde{x}|e)</span>
+<span class="n">p_e_posterior</span> <span class="o">=</span> <span class="n">p_e</span> <span class="o">*</span> <span class="n">p_x</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tildex</span> <span class="o">-</span> <span class="n">sigma</span><span class="o">*</span><span class="n">sigma</span><span class="o">*</span><span class="n">e</span><span class="p">)</span>
+
+<span class="c1"># calculate the negative score function</span>
+<span class="n">logf</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="n">dlogf</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">logf</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>  <span class="c1"># score function</span>
+<span class="n">dU</span> <span class="o">=</span> <span class="o">-</span><span class="n">dlogf</span>  <span class="c1"># negative score function. Note: U is the energy function</span>
+
+<span class="c1"># plot the numerical verification</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">axs_</span><span class="p">,</span> <span class="n">sigma_val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axs</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]):</span>
+    <span class="n">plot_numerical_verification</span><span class="p">(</span>
+        <span class="n">p_x</span><span class="p">,</span>
+        <span class="n">p_e_posterior</span><span class="p">,</span>
+        <span class="n">dU</span><span class="p">,</span>
+        <span class="n">sigma_val</span> <span class="o">=</span> <span class="n">sigma_val</span><span class="p">,</span>
+        <span class="n">tildex_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span>
+        <span class="n">e_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
+        <span class="n">axs</span><span class="o">=</span><span class="n">axs_</span><span class="p">,</span>
+        <span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span>
+        <span class="n">fewer_e_vals</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+    <span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<pre><code>/tmp/ipykernel_2728231/3909665571.py:22: UserWarning: The following kwargs were not used by contour: 'label'
+  ax.contourf(tildex_mesh, e_mesh, p_e_posterior_vals, levels=100, label='p(e|tildex) without Z')
+/tmp/ipykernel_2728231/3909665571.py:32: UserWarning: The following kwargs were not used by contour: 'label'
+  ax.contourf(tildex_mesh, e_mesh, p_e_posterior_vals/p_e_posterior_vals.max(axis=0), levels=100, label='p(e|\\tilde{x})/max_e p(e|\\tilde{x})')
+</code></pre>
+<p><img alt="png" src="../../../../denoising-score-matching-bayesian-interpretation_files/denoising-score-matching-bayesian-interpretation_23_1.png" /></p>
+<h3 id="numerical-verification-using-generated-data">Numerical verification using generated data</h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="27:2"><input checked="checked" id="__tabbed_27_1" name="__tabbed_27" type="radio" /><input id="__tabbed_27_2" name="__tabbed_27" type="radio" /><div class="tabbed-labels"><label for="__tabbed_27_1">en</label><label for="__tabbed_27_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>In the previous section, we used analytically calculated posterior distributions to confirm that MAP estimation of <span class="arithmatex">\(e\)</span> when <span class="arithmatex">\(\sigma\)</span> is sufficiently small approximates the score function, and that the posterior distribution can be approximated by a Gaussian distribution with the score function as the mean and <span class="arithmatex">\(\sigma^{-2}\)</span> as the variance.</p>
+<p>In this section, we will use generated data to numerically verify that estimating noise in denoising score matching becomes an estimation of the score function.</p>
+<p>For simplicity, we will avoid complex distributions such as Case 4 in the previous section and verify using the mixture of normal distributions <span class="arithmatex">\(p(x) = 0.5\mathcal{N}(x|-2, 1) + 0.5\mathcal{N}(x|2, 1)\)</span>.</p>
+</div>
+<div class="tabbed-block">
+<p>前節では解析的に計算した事後分布を用いて、<span class="arithmatex">\(\sigma\)</span> が十分に小さい場合の <span class="arithmatex">\(e\)</span> の MAP 推定がスコア関数を近似すること、そして事後分布がスコア関数を平均、<span class="arithmatex">\(\sigma^{-2}\)</span> を分散とするガウス分布で近似できることを確認しました。</p>
+<p>本節では生成したデータを用いて、デノイジングスコアマッチングにおいてノイズを推定することがスコア関数の推定になることを数値的に確認します。</p>
+<p>簡単のため、前節の Case 4 のような複雑な分布は避けて、混合正規分布 <span class="arithmatex">\(p(x) = 0.5\mathcal{N}(x|-2, 1) + 0.5\mathcal{N}(x|2, 1)\)</span> を用いて検証します。</p>
+</div>
+</div>
+</div>
+<div class="highlight"><pre><span></span><code><span class="n">x</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sympy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">sympy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sympy</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sympy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">sympy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sympy</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+<span class="n">logf</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="n">dlogf</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">logf</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>  <span class="c1"># score function</span>
+<span class="n">f</span>
+</code></pre></div>
+<p><span class="arithmatex">\(\displaystyle \frac{0.25 \sqrt{2} e^{- 0.5 \left(x + 2\right)^{2}}}{\sqrt{\pi}} + \frac{0.25 \sqrt{2} e^{- 0.5 \left(x - 2\right)^{2}}}{\sqrt{\pi}}\)</span></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># generate samples</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">es</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigma</span>
+<span class="n">tildexs</span> <span class="o">=</span> <span class="n">xs</span> <span class="o">+</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">es</span>
+</code></pre></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="28:2"><input checked="checked" id="__tabbed_28_1" name="__tabbed_28" type="radio" /><input id="__tabbed_28_2" name="__tabbed_28" type="radio" /><div class="tabbed-labels"><label for="__tabbed_28_1">en</label><label for="__tabbed_28_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>The following results are obtained using the generated <span class="arithmatex">\(\{(x_n, e_n, \tilde{x}_n)\}_{n=1}^{10000}\)</span>:</p>
+<ul>
+<li>Scatter plot of <span class="arithmatex">\(\{(\tilde{x}_n, e_n)\}_{n=1}^{10000}\)</span> (blue points)</li>
+<li>Average value of <span class="arithmatex">\(e\)</span> in each bin by binning <span class="arithmatex">\(\tilde{x}\)</span> (blue line)</li>
+<li>Plot of the true score function <span class="arithmatex">\(s(\tilde{x})\)</span> (red line)</li>
+</ul>
+<p>From this result, it can be numerically confirmed that estimating noise in denoising score matching becomes an estimation of the score function.</p>
+<p>Note that it is equivalent to confirming that denoising score matching works, although it is a very rough confirmation.</p>
+</div>
+<div class="tabbed-block">
+<p>下記の結果は生成した <span class="arithmatex">\(\{(x_n, e_n, \tilde{x}_n)\}_{n=1}^{10000}\)</span> を用いて、</p>
+<ul>
+<li><span class="arithmatex">\(\{(\tilde{x}_n, e_n)\}_{n=1}^{10000}\)</span> の散布図（青点）</li>
+<li><span class="arithmatex">\(\tilde{x}\)</span> をビニングして、各ビンにおける <span class="arithmatex">\(e\)</span> の平均値（青線）</li>
+<li>真のスコア関数 <span class="arithmatex">\(s(\tilde{x})\)</span> をプロット（赤線）</li>
+</ul>
+<p>を一つのグラフに描画したものです。</p>
+<p>この結果から、デノイジングスコアマッチングにおいてノイズを推定することがスコア関数の推定になることを数値的に確認することができます。</p>
+<p>かなり粗い確認ではありますが、デノイジングスコアマッチングがワークすることの確認に相当します。</p>
+</div>
+</div>
+</div>
+<div class="highlight"><pre><span></span><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">xs</span><span class="p">,</span>
+    <span class="s1">&#39;e&#39;</span><span class="p">:</span> <span class="n">es</span><span class="p">,</span>
+    <span class="s1">&#39;tildex&#39;</span><span class="p">:</span> <span class="n">tildexs</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;tildex_bin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;tildex&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">41</span><span class="p">))</span>
+<span class="n">dfg</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;tildex_bin&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">e</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">tildex_bin</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;tildex_bin&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">y</span><span class="o">.</span><span class="n">mid</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;tildex&#39;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;e&#39;</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;samples&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">dfg</span><span class="p">[</span><span class="s1">&#39;tildex_bin&#39;</span><span class="p">],</span> <span class="n">dfg</span><span class="p">[</span><span class="s1">&#39;e&#39;</span><span class="p">],</span> <span class="s1">&#39;bx-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;mean of e by bin of tildex&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="o">-</span><span class="n">sympy</span><span class="o">.</span><span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dlogf</span><span class="p">)(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">)),</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;score function&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;tildex&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;e&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<pre><code>/tmp/ipykernel_2728231/854101565.py:7: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
+  dfg = df.groupby('tildex_bin').e.mean().reset_index().assign(tildex_bin=lambda x: x['tildex_bin'].apply(lambda y: y.mid))
+</code></pre>
+<p><img alt="png" src="../../../../denoising-score-matching-bayesian-interpretation_files/denoising-score-matching-bayesian-interpretation_28_1.png" /></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="29:2"><input checked="checked" id="__tabbed_29_1" name="__tabbed_29" type="radio" /><input id="__tabbed_29_2" name="__tabbed_29" type="radio" /><div class="tabbed-labels"><label for="__tabbed_29_1">en</label><label for="__tabbed_29_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>The following results show the histogram of <span class="arithmatex">\(e\)</span> of the data contained in the bins of <span class="arithmatex">\(\tilde{x}\)</span> with a certain number of observations (density: left, cumulative density: right) plotted in blue bins.
+These correspond to the density function and cumulative density function of <span class="arithmatex">\(p(e|\tilde{x})\)</span>.
+In particular, <span class="arithmatex">\(\mathcal{N}(e|-s(\tilde{x}), \sigma^{-2})\)</span> is plotted in red as a reference.</p>
+<p>From the following results, it can be confirmed that <span class="arithmatex">\(p(e|\tilde{x})\)</span> can be approximated by <span class="arithmatex">\(\mathcal{N}(e|-s(\tilde{x}), \sigma^{-2})\)</span>.</p>
+<p>Incidentally, it can also be confirmed that the difference between the cumulative density functions of <span class="arithmatex">\(p(e|\tilde{x})\)</span> and <span class="arithmatex">\(\mathcal{N}(e|-s(\tilde{x}), \sigma^{-2})\)</span> is not significant by the Kolmogorov-Smirnov test.</p>
+</div>
+<div class="tabbed-block">
+<p>以下、観測数がある程度多い <span class="arithmatex">\(\tilde{x}\)</span> のビンに含まれるデータの <span class="arithmatex">\(e\)</span> のヒストグラム（密度：左、累積密度：右）を青いビンでプロットした結果である。
+これらは <span class="arithmatex">\(p(e|\tilde{x})\)</span> に相当する密度関数および累積密度関数である。
+特に比較対象として <span class="arithmatex">\(\mathcal{N}(e|-s(\tilde{x}), \sigma^{-2})\)</span> を赤い線でプロットしている。</p>
+<p>下記の結果、<span class="arithmatex">\(p(e|\tilde{x})\)</span> が <span class="arithmatex">\(\mathcal{N}(e|-s(\tilde{x}), \sigma^{-2})\)</span> に近似できることが確認できる。</p>
+<p>ついでではあるが Kolmogorov-Smirnov 検定により、<span class="arithmatex">\(p(e|\tilde{x})\)</span> と <span class="arithmatex">\(\mathcal{N}(e|-s(\tilde{x}), \sigma^{-2})\)</span> の累積密度関数の差が有意であるとは言えないことも確認できる。</p>
+</div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="30:2"><input checked="checked" id="__tabbed_30_1" name="__tabbed_30" type="radio" /><input id="__tabbed_30_2" name="__tabbed_30" type="radio" /><div class="tabbed-labels"><label for="__tabbed_30_1">en</label><label for="__tabbed_30_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>Here, we are not trying to perform a strict statistical hypothesis test, but are simply checking the test statistics and p-values for reference.
+Therefore, it should be noted that it is nonsense to point out that the way of hypothesis testing is wrong or the interpretation of p-values is wrong.</p>
+</div>
+<div class="tabbed-block">
+<p>ここでは厳密な統計的仮説検定を行いたい訳ではなく、参考程度に検定統計量および p 値を確認している程度である。
+したがって、仮説検定のやり方が間違っているや p 値の解釈が間違っているなどのご指摘はナンセンスであることには留意されたい。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="highlight"><pre><span></span><code><span class="n">targets</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;tildex_bin&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span><span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">iloc</span><span class="p">[[</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">*</span><span class="mf">0.4</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">*</span><span class="mf">0.75</span><span class="p">)]])</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="nb">bin</span><span class="p">,</span> <span class="n">grp</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;tildex_bin&#39;</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="nb">bin</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">:</span>
+        <span class="k">continue</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;tildex in </span><span class="si">{</span><span class="nb">bin</span><span class="si">}</span><span class="s1">(# of samples=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">grp</span><span class="p">)</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;histogram of e conditioned on tildex in </span><span class="si">{</span><span class="nb">bin</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">axd</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">grp</span><span class="p">[</span><span class="s1">&#39;e&#39;</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;e conditioned on tildex in </span><span class="si">{</span><span class="nb">bin</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">grp</span><span class="p">[</span><span class="s1">&#39;e&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;mean=</span><span class="si">{</span><span class="n">grp</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">axd</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">*</span><span class="n">grp</span><span class="p">[</span><span class="s1">&#39;e&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">]),</span> <span class="mi">100</span><span class="p">),</span>
+        <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">*</span><span class="n">grp</span><span class="p">[</span><span class="s1">&#39;e&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">]),</span> <span class="mi">100</span><span class="p">),</span> <span class="n">loc</span><span class="o">=-</span><span class="n">sympy</span><span class="o">.</span><span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dlogf</span><span class="p">)(</span><span class="nb">bin</span><span class="o">.</span><span class="n">mid</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="n">sigma</span><span class="p">),</span>
+        <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;N(e|</span><span class="si">{</span><span class="o">-</span><span class="n">sympy</span><span class="o">.</span><span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">dlogf</span><span class="p">)(</span><span class="nb">bin</span><span class="o">.</span><span class="n">mid</span><span class="p">)</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">sigma</span><span class="o">**-</span><span class="mi">2</span><span class="si">}</span><span class="s1">)&#39;</span>
+    <span class="p">)</span>
+    <span class="n">axd</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
+    <span class="n">axd</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;e&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;frequency&#39;</span><span class="p">)</span>
+    <span class="n">axd</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;N(e|score(tildex), sigma^{-2})&#39;</span><span class="p">)</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">grp</span><span class="p">[</span><span class="s1">&#39;e&#39;</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;e conditioned on tildex in </span><span class="si">{</span><span class="nb">bin</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">cumulative</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">cdf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">*</span><span class="n">grp</span><span class="p">[</span><span class="s1">&#39;e&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">]),</span> <span class="mi">100</span><span class="p">),</span> <span class="n">loc</span><span class="o">=-</span><span class="n">sympy</span><span class="o">.</span><span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dlogf</span><span class="p">)(</span><span class="nb">bin</span><span class="o">.</span><span class="n">mid</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="n">sigma</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">*</span><span class="n">grp</span><span class="p">[</span><span class="s1">&#39;e&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">]),</span> <span class="mi">100</span><span class="p">),</span> <span class="p">(</span><span class="n">cdf</span><span class="o">-</span><span class="n">cdf</span><span class="o">.</span><span class="n">min</span><span class="p">())</span><span class="o">/</span><span class="p">(</span><span class="n">cdf</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">-</span><span class="n">cdf</span><span class="o">.</span><span class="n">min</span><span class="p">()),</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;N(e|</span><span class="si">{</span><span class="o">-</span><span class="n">sympy</span><span class="o">.</span><span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">dlogf</span><span class="p">)(</span><span class="nb">bin</span><span class="o">.</span><span class="n">mid</span><span class="p">)</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">sigma</span><span class="o">**-</span><span class="mi">2</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;e&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;cumulative density&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
+    <span class="n">ksresult</span> <span class="o">=</span> <span class="n">kstest</span><span class="p">(</span><span class="n">grp</span><span class="p">[</span><span class="s2">&quot;e&quot;</span><span class="p">],</span> <span class="n">cdf</span><span class="o">=</span><span class="s2">&quot;norm&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="n">sympy</span><span class="o">.</span><span class="n">lambdify</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dlogf</span><span class="p">)(</span><span class="nb">bin</span><span class="o">.</span><span class="n">mid</span><span class="p">),</span> <span class="mi">1</span><span class="o">/</span><span class="n">sigma</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;cumulative histogram of x conditioned on tildex in </span><span class="si">{</span><span class="nb">bin</span><span class="si">}</span><span class="s1">:</span><span class="se">\n</span><span class="s1"> kstest.statistics=</span><span class="si">{</span><span class="n">ksresult</span><span class="o">.</span><span class="n">statistic</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">, kstest.pvalue=</span><span class="si">{</span><span class="n">ksresult</span><span class="o">.</span><span class="n">pvalue</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<pre><code>/tmp/ipykernel_2728231/1909367853.py:3: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
+  for bin, grp in df.groupby('tildex_bin'):
+</code></pre>
+<p><img alt="png" src="../../../../denoising-score-matching-bayesian-interpretation_files/denoising-score-matching-bayesian-interpretation_30_1.png" /></p>
+<p><img alt="png" src="../../../../denoising-score-matching-bayesian-interpretation_files/denoising-score-matching-bayesian-interpretation_30_2.png" /></p>
+<h2 id="summary">Summary</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="31:2"><input checked="checked" id="__tabbed_31_1" name="__tabbed_31" type="radio" /><input id="__tabbed_31_2" name="__tabbed_31" type="radio" /><div class="tabbed-labels"><label for="__tabbed_31_1">en</label><label for="__tabbed_31_2">ja</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>In this article, we attempted to intuitively understand that estimating noise in denoising score matching becomes an estimation of the score function using Bayesian estimation.</p>
+<p>As a result, using a simple one-dimensional model as an example, we showed that the score function is estimated by the MAP estimation (Maximum A Posteriori Estimation) of the scaled noise.
+Furthermore, we also showed that when <span class="arithmatex">\(\sigma\)</span> is sufficiently small, the posterior distribution of the scaled noise becomes a Gaussian distribution with the negative of the score function as the mean and <span class="arithmatex">\(\sigma^{-2}\)</span> as the variance, confirming that it does not contradict the empirical results of existing studies.</p>
+<p>Moreover, using generated data, we numerically confirmed that estimating noise in denoising score matching becomes an estimation of the score function.</p>
+<p>The following topics are likely to be considered as the next topics:</p>
+<ul>
+<li>interpretation of noise estimation using models of two or more dimensions;</li>
+<li>exploration of the objective function through the approximation of the posterior distribution of noise when the noise distribution is not normal.</li>
+</ul>
+<p>If you have any questions or suggestions for improvement regarding this article, please let us know through social media.</p>
+<p>From the above results, it was found that estimating noise in denoising score matching becomes an estimation of the score function.
+I hope this article will be helpful for those studying diffusion models.</p>
+<p>Thank you for reading 👋</p>
+</div>
+<div class="tabbed-block">
+<p>本記事ではデノイジングスコアマッチングにおいてノイズを推定することがスコア関数の推定になることをベイズ推定を用いて直感的に理解することを試みました。</p>
+<p>その結果、1次元の簡単なモデルを題材として、スケーリングされたノイズの MAP 推定（Maximum A Posteriori Estimation）により、スコア関数が推定されることを示しました。
+さらに <span class="arithmatex">\(\sigma\)</span> が十分に小さい場合はスケーリングされたノイズの事後分布がスコア関数の負の値を平均値、<span class="arithmatex">\(\sigma^{-2}\)</span>とするガウス分布になることも示し、既存の研究の経験的な結果と矛盾しないことを確認しました。</p>
+<p>また、生成したデータを用いて、デノイジングスコアマッチングにおいてノイズを推定することがスコア関数の推定になることを数値的に確認しました。</p>
+<p>次の話題としては下記のようなものが挙げられます：</p>
+<ul>
+<li>二次元以上のモデルを題材としたノイズの推定の解釈</li>
+<li>ノイズの分布が正規分布ではない場合のノイズの事後分布の近似を通じたデノイジングスコアマッチングの目的関数の探索</li>
+</ul>
+<p>本記事に関する質問や改善提案があれば、ソーシャルメディア等を通じてお知らせください。</p>
+<p>以上の結果により、デノイジングスコアマッチングにおいてノイズを推定することがスコア関数の推定になることがわかりました。
+この記事が拡散モデルを勉強している人の役に立てれば嬉しいです</p>
+<p>それでは、最後まで読んでいただき、ありがとうございました 👋</p>
+</div>
+</div>
+</div>
+<h2 id="references">References</h2>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p><a href="https://ieeexplore.ieee.org/document/6795935">P. Vincent, "A Connection Between Score Matching and Denoising Autoencoders," Neural Computation, 2011.</a>&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://www.jmlr.org/papers/volume11/vincent10a/vincent10a.pdf">P. Vincent, "Stacked Denoising Autoencoders: Learning Useful Representations in a Deep Network with a Local Denoising Criterion," Journal of Machine Learning Research, 2010.</a>&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="https://hillbig.github.io/JNNS2023_okanohara.pdf">岡野原大輔, "拡散と流れに基づく学習と推論", 神経回路学会2023 全国大会 基調講演, 2023.</a>&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:4">
+<p><a href="https://arxiv.org/abs/1907.05600">Y. Song and S. Ermon, "Generative Modeling by Estimating Gradients of Data Distribution", In Proceedings of NeurIPS, 2019.</a>&#160;<a class="footnote-backref" href="#fnref:4" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+  
+
+
+
+      
+    </article>
+  </div>
+
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2024 hmasdev
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/hmasdev" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://x.com/hmdev3" target="_blank" rel="noopener" title="x.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../../../..", "features": ["content.tabs.link", "navigation.footer", "navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.tabs.path", "navigation.tabs.sticky", "navigation.top", "navigation.tracking"], "search": "../../../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../../../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+        <script src="../../../../../javascripts/mathajax.js"></script>
+      
+        <script src="../../../../../javascripts/katex.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/contrib/auto-render.min.js"></script>
+      
+    
+  </body>
+</html>
