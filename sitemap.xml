@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://hmasdev.github.io/hmasdev-notes/</loc>
+         <loc>https://hmasdev.github.io/hmasdev-note/</loc>
          <lastmod>2024-11-25</lastmod>
     </url>
     <url>
-         <loc>https://hmasdev.github.io/hmasdev-notes/about/</loc>
+         <loc>https://hmasdev.github.io/hmasdev-note/about/</loc>
          <lastmod>2024-11-25</lastmod>
     </url>
     <url>
-         <loc>https://hmasdev.github.io/hmasdev-notes/articles/</loc>
+         <loc>https://hmasdev.github.io/hmasdev-note/articles/</loc>
          <lastmod>2024-11-25</lastmod>
     </url>
     <url>
-         <loc>https://hmasdev.github.io/hmasdev-notes/articles/externals/</loc>
+         <loc>https://hmasdev.github.io/hmasdev-note/articles/externals/</loc>
          <lastmod>2024-11-25</lastmod>
     </url>
     <url>
-         <loc>https://hmasdev.github.io/hmasdev-notes/articles/2024/11/23/denoising-score-matching-bayesian-interpretation-of-why-the-noise-prediction-model-denoising-model-can-estimate-the-score-function/</loc>
+         <loc>https://hmasdev.github.io/hmasdev-note/articles/2024/11/23/denoising-score-matching-bayesian-interpretation-of-why-the-noise-prediction-model-denoising-model-can-estimate-the-score-function/</loc>
          <lastmod>2024-11-25</lastmod>
     </url>
     <url>
-         <loc>https://hmasdev.github.io/hmasdev-notes/articles/archive/2024/</loc>
+         <loc>https://hmasdev.github.io/hmasdev-note/articles/archive/2024/</loc>
          <lastmod>2024-11-25</lastmod>
     </url>
     <url>
-         <loc>https://hmasdev.github.io/hmasdev-notes/articles/category/data-science/</loc>
+         <loc>https://hmasdev.github.io/hmasdev-note/articles/category/data-science/</loc>
          <lastmod>2024-11-25</lastmod>
     </url>
     <url>
-         <loc>https://hmasdev.github.io/hmasdev-notes/tags/</loc>
+         <loc>https://hmasdev.github.io/hmasdev-note/tags/</loc>
          <lastmod>2024-11-25</lastmod>
     </url>
 </urlset>
